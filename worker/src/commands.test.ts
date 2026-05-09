@@ -24,10 +24,11 @@ describe("parseCommand — auth", () => {
 });
 
 describe("parseCommand — verbs", () => {
-  it("on/off/stats", () => {
+  it("on/off/stats/help", () => {
     expect(parseCommand("!bot on", modTags).kind).toBe("on");
     expect(parseCommand("!bot off", modTags).kind).toBe("off");
     expect(parseCommand("!bot stats", modTags).kind).toBe("stats");
+    expect(parseCommand("!bot help", modTags).kind).toBe("help");
   });
 
   it("ban with @prefix and lowercased", () => {

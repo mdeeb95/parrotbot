@@ -32,6 +32,7 @@ export type Command =
   | { kind: "on" }
   | { kind: "off" }
   | { kind: "stats" }
+  | { kind: "help" }
   | { kind: "set"; target: SetTarget; value: string }
   | { kind: "ignore"; intent: string; minutes?: number }
   | { kind: "ban"; username: string }
@@ -76,6 +77,8 @@ export function parseCommand(text: string, tags: TmiTags): Command {
       return { kind: "off" };
     case "stats":
       return { kind: "stats" };
+    case "help":
+      return { kind: "help" };
     case "ban": {
       const u = rest[0];
       if (!u) return { kind: "unknown" };
@@ -223,6 +226,15 @@ export async function handleCommand(
       }
       const m = state.cooldowns.ignoreIntent(cmd.intent, cmd.minutes);
       return { result: "ok", reply: `ignoring ${cmd.intent} for ${m} min` };
+    }
+    case "help": {
+      const url = process.env.APP_URL
+        ? `${process.env.APP_URL.replace(/\/$/, "")}/help`
+        : "the dashboard";
+      return {
+        result: "ok",
+        reply: `commands: on, off, stats, ban, ignore, set. Full list: ${url}`,
+      };
     }
     case "set":
       return handleSet(state, cmd);
