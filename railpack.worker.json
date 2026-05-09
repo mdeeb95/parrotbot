@@ -1,0 +1,14 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "steps": {
+    "build": {
+      "commands": [
+        "npm install --workspaces --include-workspace-root",
+        "npm --workspace worker run build"
+      ]
+    }
+  },
+  "deploy": {
+    "startCommand": "npm --workspace worker run start"
+  }
+}
