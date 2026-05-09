@@ -48,23 +48,6 @@ export function loadBlocklist(path: string): string[] {
   }
 }
 
-// 10-char rolling window match against any input message.
-// Off-by-one here silently disables verbatim-quote protection — be careful.
-function hasVerbatimQuote(answer: string, batch: ChatMessage[]): boolean {
-  const a = answer.toLowerCase();
-  const WINDOW = 10;
-  if (a.length < WINDOW) return false;
-  for (const msg of batch) {
-    const m = msg.text.toLowerCase();
-    if (m.length < WINDOW) continue;
-    for (let i = 0; i + WINDOW <= m.length; i++) {
-      const slice = m.slice(i, i + WINDOW);
-      if (a.includes(slice)) return true;
-    }
-  }
-  return false;
-}
-
 export type OutputFilterResult =
   | { ok: true; reason: null }
   | { ok: false; reason: BlockReason };
@@ -111,10 +94,6 @@ export function createOutputFilter(deps: {
       if (lower.includes(m)) return { ok: false, reason: "mention_ban" };
     }
 
-    if (hasVerbatimQuote(answer, batch)) {
-      return { ok: false, reason: "verbatim_quote" };
-    }
-
     for (const phrase of deps.blocklist) {
       if (lower.includes(phrase)) return { ok: false, reason: "slur_filter" };
     }
@@ -147,5 +126,3 @@ export function createStrikeTracker(deps: { strikeLimit: number }): StrikeTracke
 
   return { isBanned, recordStrike };
 }
-
-export { hasVerbatimQuote };

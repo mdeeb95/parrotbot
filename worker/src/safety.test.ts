@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import {
   looksLikeInjection,
-  hasVerbatimQuote,
   createOutputFilter,
   createStrikeTracker,
 } from "./safety";
@@ -43,28 +42,6 @@ function chat(text: string, id = "m1", author = "alice"): ChatMessage {
     isModOrBroadcaster: false,
   };
 }
-
-describe("hasVerbatimQuote", () => {
-  it("detects 10-char windows from any input message", () => {
-    const batch = [chat("the quick brown fox jumps over")];
-    expect(hasVerbatimQuote("answer: the quick brown fox", batch)).toBe(true);
-  });
-
-  it("ignores short batches", () => {
-    const batch = [chat("short")];
-    expect(hasVerbatimQuote("answer here", batch)).toBe(false);
-  });
-
-  it("ignores short answers", () => {
-    const batch = [chat("the quick brown fox jumps over")];
-    expect(hasVerbatimQuote("a", batch)).toBe(false);
-  });
-
-  it("returns false when no overlap", () => {
-    const batch = [chat("totally different content here")];
-    expect(hasVerbatimQuote("the cake is a lie", batch)).toBe(false);
-  });
-});
 
 function group(overrides: Partial<Group> = {}): Group {
   return {
@@ -141,14 +118,13 @@ describe("createOutputFilter", () => {
     if (!r.ok) expect(r.reason).toBe("mention_ban");
   });
 
-  it("blocks verbatim_quote", () => {
+  it("allows answers that overlap with input text (verbatim check removed)", () => {
     const f = createOutputFilter(baseDeps);
     const r = f.shouldPost(
       group({ answer: "the quick brown fox is the answer" }),
       [chat("the quick brown fox jumps over")],
     );
-    expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.reason).toBe("verbatim_quote");
+    expect(r.ok).toBe(true);
   });
 
   it("blocks slur_filter", () => {
