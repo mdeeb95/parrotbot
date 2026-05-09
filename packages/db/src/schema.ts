@@ -13,7 +13,7 @@ import {
   index,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
-import type { ChannelSettings } from "./kb-schema";
+import type { ChannelSettings } from "./kb-schema.js";
 
 export type KnowledgeBase = {
   identity: { name: string; pronouns: string };
