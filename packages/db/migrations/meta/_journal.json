@@ -22,6 +22,13 @@
       "when": 1778457000000,
       "tag": "0002_dynamic_links",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1778460000000,
+      "tag": "0003_persist_blocks",
+      "breakpoints": true
     }
   ]
 }

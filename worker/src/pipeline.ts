@@ -15,6 +15,7 @@ import { isOverCap, addTokens } from "./cap.js";
 import {
   appendJsonl,
   recordPostedAnswer,
+  recordBlockedGroup,
   recordTokenUsageOnly,
 } from "./log.js";
 import { parseCommand, handleCommand } from "./commands.js";
@@ -165,6 +166,21 @@ export function createPipeline(deps: PipelineDeps) {
         group_index: i,
         reason: "cap_exceeded" as BlockReason,
       }));
+      // One DB row per input message — they're each effectively their own 1-asker
+      // group at this stage (no LLM ran). No token cost since we never called.
+      for (const m of messages) {
+        recordBlockedGroup({
+          channelId: state.channelId,
+          intent: null,
+          attemptedAnswer: null,
+          askerCount: 1,
+          confidence: null,
+          blockReason: "cap_exceeded",
+          inputMessages: [{ author: m.author, text: m.text }],
+          tokensInputDelta: 0,
+          tokensOutputDelta: 0,
+        });
+      }
       appendJsonl(state.twitchChannel, {
         ts: new Date().toISOString(),
         type: "batch",
@@ -220,7 +236,17 @@ export function createPipeline(deps: PipelineDeps) {
     const posted: { group_index: number; post_text: string }[] = [];
     const blocked: { group_index: number; reason: BlockReason }[] = [];
 
-    let postedThisBatch = false;
+    // Attribute the full batch token cost to the first group we record (posted
+    // or blocked). Subsequent groups in the same batch claim 0 to avoid double-counting.
+    let tokensClaimed = false;
+    const tokensInputCost = tokens.input + tokens.cache_read + tokens.cache_creation;
+    const tokensOutputCost = tokens.output;
+    function claimTokens(): { input: number; output: number } {
+      if (tokensClaimed) return { input: 0, output: 0 };
+      tokensClaimed = true;
+      return { input: tokensInputCost, output: tokensOutputCost };
+    }
+
     for (let i = 0; i < result.groups.length; i++) {
       const g = result.groups[i];
       const ids = Array.isArray(g.message_ids) ? g.message_ids : [];
@@ -230,26 +256,40 @@ export function createPipeline(deps: PipelineDeps) {
       const distinctDisplayNames = [
         ...new Set(groupMsgs.map((m) => m.displayName)),
       ];
+      const groupInputs = groupMsgs.map((m) => ({ author: m.author, text: m.text }));
+
+      const recordBlock = (reason: BlockReason) => {
+        blocked.push({ group_index: i, reason });
+        state.stats.blocked += 1;
+        const t = claimTokens();
+        recordBlockedGroup({
+          channelId: state.channelId,
+          intent: typeof g.intent === "string" ? g.intent : null,
+          attemptedAnswer: typeof g.answer === "string" ? g.answer : null,
+          askerCount: distinctDisplayNames.length || 1,
+          confidence: typeof g.confidence === "number" ? g.confidence : null,
+          blockReason: reason,
+          inputMessages: groupInputs,
+          tokensInputDelta: t.input,
+          tokensOutputDelta: t.output,
+        });
+      };
 
       const outcome = outputFilter.shouldPost(g, messages);
       if (!outcome.ok) {
-        blocked.push({ group_index: i, reason: outcome.reason });
-        state.stats.blocked += 1;
+        recordBlock(outcome.reason);
         continue;
       }
       if (state.postingDisabled) {
-        blocked.push({ group_index: i, reason: "bot_off" });
-        state.stats.blocked += 1;
+        recordBlock("bot_off");
         continue;
       }
       if (state.shadowMode) {
-        blocked.push({ group_index: i, reason: "shadow_mode" });
-        state.stats.blocked += 1;
+        recordBlock("shadow_mode");
         continue;
       }
       if (!state.cooldowns.checkIntent(g.intent)) {
-        blocked.push({ group_index: i, reason: "intent_cooldown" });
-        state.stats.blocked += 1;
+        recordBlock("intent_cooldown");
         continue;
       }
       if (deps.postAllowlist && !deps.postAllowlist.has(state.twitchChannel)) {
@@ -257,8 +297,7 @@ export function createPipeline(deps: PipelineDeps) {
           { twitchChannel: state.twitchChannel, group_index: i },
           "post blocked by post_allowlist",
         );
-        blocked.push({ group_index: i, reason: "post_failed" });
-        state.stats.blocked += 1;
+        recordBlock("post_failed");
         continue;
       }
 
@@ -267,34 +306,33 @@ export function createPipeline(deps: PipelineDeps) {
         await deps.client.say("#" + state.twitchChannel, postText);
       } catch (err) {
         log.warn({ err, group_index: i }, "post failed");
-        blocked.push({ group_index: i, reason: "post_failed" });
-        state.stats.blocked += 1;
+        recordBlock("post_failed");
         continue;
       }
       state.cooldowns.markIntent(g.intent);
       posted.push({ group_index: i, post_text: postText });
       state.stats.posted += 1;
-      postedThisBatch = true;
 
-      // DB write (queued, fire-and-log).
+      const t = claimTokens();
       recordPostedAnswer({
         channelId: state.channelId,
         intent: g.intent,
         answer: g.answer as string,
         askerCount: distinctDisplayNames.length,
         confidence: g.confidence,
-        tokensInputDelta: tokens.input + tokens.cache_read + tokens.cache_creation,
-        tokensOutputDelta: tokens.output,
+        inputMessages: groupInputs,
+        tokensInputDelta: t.input,
+        tokensOutputDelta: t.output,
       });
     }
 
-    // If nothing posted but tokens were spent, still record token usage so
-    // the cap reflects reality across restarts.
-    if (!postedThisBatch && tokenTotal > 0) {
+    // Edge case: result.groups was empty (parse_error) so no group claimed
+    // the token cost. Record the spend separately so the cap is accurate.
+    if (!tokensClaimed && tokenTotal > 0) {
       recordTokenUsageOnly({
         channelId: state.channelId,
-        tokensInputDelta: tokens.input + tokens.cache_read + tokens.cache_creation,
-        tokensOutputDelta: tokens.output,
+        tokensInputDelta: tokensInputCost,
+        tokensOutputDelta: tokensOutputCost,
       });
     }
 
@@ -312,12 +350,17 @@ export function createPipeline(deps: PipelineDeps) {
       parse_error: result.parse_error,
     });
 
+    const reasonCounts: Record<string, number> = {};
+    for (const b of blocked) {
+      reasonCounts[b.reason] = (reasonCounts[b.reason] ?? 0) + 1;
+    }
     log.info(
       {
         size: messages.length,
         groups: result.groups.length,
         posted: posted.length,
         blocked: blocked.length,
+        reasons: reasonCounts,
         latency_ms: result.latency_ms,
       },
       "batch processed",

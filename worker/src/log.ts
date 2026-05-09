@@ -176,6 +176,8 @@ export async function drainAllDbQueues(): Promise<void> {
   await Promise.allSettled(all);
 }
 
+type InputMessage = { author: string; text: string };
+
 // Note on token accounting: we count input + cache_read + cache_creation + output
 // because all four are charged on the Anthropic invoice. The brief technically
 // says "input only," but that under-counts real spend.
@@ -185,15 +187,20 @@ export function recordPostedAnswer(args: {
   answer: string;
   askerCount: number;
   confidence: number;
+  inputMessages: InputMessage[];
   tokensInputDelta: number;
   tokensOutputDelta: number;
 }): Promise<void> {
   const today = todayUtc();
+  const inputJson = JSON.stringify(args.inputMessages);
   return queueDbWrite(args.channelId, async () => {
     await db.execute(sql`
       WITH ins AS (
-        INSERT INTO answers_log (channel_id, intent, answer_text, asker_count, confidence)
-        VALUES (${args.channelId}, ${args.intent}, ${args.answer}, ${args.askerCount}, ${args.confidence})
+        INSERT INTO answers_log
+          (channel_id, intent, answer_text, asker_count, confidence, input_messages)
+        VALUES
+          (${args.channelId}, ${args.intent}, ${args.answer}, ${args.askerCount},
+           ${args.confidence}, ${inputJson}::jsonb)
         RETURNING 1
       )
       INSERT INTO usage_daily (channel_id, date, answers_posted, tokens_input, tokens_output)
@@ -203,6 +210,48 @@ export function recordPostedAnswer(args: {
         answers_posted = usage_daily.answers_posted + 1,
         tokens_input   = usage_daily.tokens_input + EXCLUDED.tokens_input,
         tokens_output  = usage_daily.tokens_output + EXCLUDED.tokens_output;
+    `);
+  });
+}
+
+// Record a blocked group: inserts an answers_log row with block_reason set,
+// upserts blocks_summary count, and adds tokens to usage_daily without bumping
+// answers_posted. One round-trip per blocked group.
+export function recordBlockedGroup(args: {
+  channelId: string;
+  intent: string | null;
+  attemptedAnswer: string | null;
+  askerCount: number;
+  confidence: number | null;
+  blockReason: string;
+  inputMessages: InputMessage[];
+  tokensInputDelta: number;
+  tokensOutputDelta: number;
+}): Promise<void> {
+  const today = todayUtc();
+  const inputJson = JSON.stringify(args.inputMessages);
+  return queueDbWrite(args.channelId, async () => {
+    await db.execute(sql`
+      WITH ins_answer AS (
+        INSERT INTO answers_log
+          (channel_id, intent, answer_text, asker_count, confidence, block_reason, input_messages)
+        VALUES
+          (${args.channelId}, ${args.intent}, ${args.attemptedAnswer}, ${args.askerCount},
+           ${args.confidence}, ${args.blockReason}, ${inputJson}::jsonb)
+        RETURNING 1
+      ),
+      ins_summary AS (
+        INSERT INTO blocks_summary (channel_id, date, block_reason, count)
+        VALUES (${args.channelId}, ${today}::date, ${args.blockReason}, 1)
+        ON CONFLICT (channel_id, date, block_reason)
+          DO UPDATE SET count = blocks_summary.count + 1
+        RETURNING 1
+      )
+      INSERT INTO usage_daily (channel_id, date, answers_posted, tokens_input, tokens_output)
+      VALUES (${args.channelId}, ${today}::date, 0, ${args.tokensInputDelta}, ${args.tokensOutputDelta})
+      ON CONFLICT (channel_id, date) DO UPDATE SET
+        tokens_input  = usage_daily.tokens_input  + EXCLUDED.tokens_input,
+        tokens_output = usage_daily.tokens_output + EXCLUDED.tokens_output;
     `);
   });
 }

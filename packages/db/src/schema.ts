@@ -91,9 +91,32 @@ export const answersLog = pgTable(
     answerText: text("answer_text"),
     askerCount: integer("asker_count").default(1).notNull(),
     confidence: real("confidence"),
+    blockReason: text("block_reason"),
+    inputMessages: jsonb("input_messages")
+      .$type<Array<{ author: string; text: string }>>()
+      .default([])
+      .notNull(),
   },
   (t) => ({
     channelTsIdx: index("answers_log_channel_ts_idx").on(t.channelId, t.ts.desc()),
+    channelBlockIdx: index("answers_log_channel_block_reason_idx").on(t.channelId, t.blockReason),
+  }),
+);
+
+export const blocksSummary = pgTable(
+  "blocks_summary",
+  {
+    id: uuid("id").primaryKey().default(sql`gen_random_uuid()`),
+    channelId: uuid("channel_id")
+      .notNull()
+      .references(() => channels.id, { onDelete: "cascade" }),
+    date: date("date").notNull(),
+    blockReason: text("block_reason").notNull(),
+    count: integer("count").default(0).notNull(),
+  },
+  (t) => ({
+    uniq: unique("blocks_summary_uniq").on(t.channelId, t.date, t.blockReason),
+    channelDateIdx: index("blocks_summary_channel_date_idx").on(t.channelId, t.date),
   }),
 );
 

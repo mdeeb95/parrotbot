@@ -1,11 +1,13 @@
+import Link from "next/link";
 import { and, eq, sql, desc } from "drizzle-orm";
 import { db } from "@parrot/db";
-import { usageDaily, answersLog } from "@parrot/db/schema";
+import { usageDaily, answersLog, blocksSummary } from "@parrot/db/schema";
 import { getAuthContext } from "@/lib/auth";
 import { Card } from "@/components/ui/card";
 import { SetupChecklist } from "./_components/setup-checklist";
 import { StatusToggle } from "./_components/status-toggle";
 import { cn } from "@/lib/utils";
+import { categorize, labelFor } from "@/lib/block-reasons";
 
 export const dynamic = "force-dynamic";
 
@@ -64,6 +66,17 @@ export default async function OverviewPage() {
     .groupBy(answersLog.intent)
     .orderBy(desc(sql`count(*)`))
     .limit(1);
+
+  const todayBlocks = await db
+    .select()
+    .from(blocksSummary)
+    .where(
+      and(
+        eq(blocksSummary.channelId, channel.id),
+        eq(blocksSummary.date, todayDateString()),
+      ),
+    );
+  const todayBlockedTotal = todayBlocks.reduce((acc, r) => acc + r.count, 0);
 
   const monthlyAnswers = monthRow?.total ?? 0;
   const todayAnswers = todayRow?.answersPosted ?? 0;
@@ -129,18 +142,55 @@ export default async function OverviewPage() {
 
       <Card>
         <h2 className="mb-4 text-[16px] font-semibold">Today</h2>
-        {hasAnyUsage ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <Stat label="Answers posted" value={String(todayAnswers)} />
-            <Stat
-              label="Top question"
-              value={topIntent[0]?.intent || "—"}
-            />
-            <Stat
-              label="Active"
-              value={channel.isActive ? "Yes" : "No"}
-            />
-          </div>
+        {hasAnyUsage || todayBlockedTotal > 0 ? (
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+              <Stat label="Answers posted" value={String(todayAnswers)} />
+              <Stat
+                label="Top question"
+                value={topIntent[0]?.intent || "—"}
+              />
+              <Stat label="Active" value={channel.isActive ? "Yes" : "No"} />
+            </div>
+            {todayBlockedTotal > 0 && (
+              <div className="mt-5 border-t border-border pt-4">
+                <div className="mb-2 flex items-center justify-between">
+                  <div className="text-[13px] text-text-muted">
+                    {todayBlockedTotal} blocked today
+                  </div>
+                  <Link
+                    href="/dashboard/activity?show=actionable"
+                    className="text-[12px] text-accent underline-offset-4 hover:underline"
+                  >
+                    View activity →
+                  </Link>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {todayBlocks
+                    .sort((a, b) => b.count - a.count)
+                    .map((r) => {
+                      const label = labelFor(r.blockReason);
+                      const cat = categorize(r.blockReason);
+                      return (
+                        <span
+                          key={r.blockReason}
+                          title={label.explainer}
+                          className={`rounded-full border px-2.5 py-0.5 text-[12px] ${
+                            cat === "actionable"
+                              ? "border-[#5c4017] bg-[#241a0e] text-[#f0b35a]"
+                              : cat === "operational"
+                                ? "border-border bg-bg text-text-muted"
+                                : "border-[#5a2020] bg-[#2a1010] text-[#ff8a8a]"
+                          }`}
+                        >
+                          {label.title} · {r.count}
+                        </span>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+          </>
         ) : (
           <p className="text-[14px] text-text-muted">
             Once your bot starts answering, you'll see stats here.
