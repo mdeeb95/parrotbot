@@ -1,7 +1,7 @@
 import { db } from "@parrot/db";
 import { usageDaily } from "@parrot/db/schema";
 import { eq, and } from "drizzle-orm";
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 
 type CapState = { tokens: number; date: string };
 

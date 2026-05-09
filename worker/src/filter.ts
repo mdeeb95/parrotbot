@@ -1,4 +1,4 @@
-import type { ChatMessage } from "./types";
+import type { ChatMessage } from "./types.js";
 
 const BOT_AUTHORS = new Set([
   "nightbot",

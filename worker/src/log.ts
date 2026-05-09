@@ -11,7 +11,7 @@ import { randomBytes } from "node:crypto";
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 import { db } from "@parrot/db";
 import { sql } from "drizzle-orm";
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 
 type R2Config = {
   endpoint: string;

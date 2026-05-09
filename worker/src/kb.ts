@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import type { KnowledgeBase } from "@parrot/db/schema";
-import type { IntentVocab } from "./types";
+import type { IntentVocab } from "./types.js";
 
 const URL_RE = /(https?:\/\/[^\s)]+|www\.[^\s)]+)/gi;
 

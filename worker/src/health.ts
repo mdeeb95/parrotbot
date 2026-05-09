@@ -2,7 +2,7 @@ import { createServer, Server } from "node:http";
 import { db } from "@parrot/db";
 import { sql } from "drizzle-orm";
 import type { Client } from "tmi.js";
-import { logger } from "./logger";
+import { logger } from "./logger.js";
 
 type DbPing = { ok: boolean; checkedAt: number };
 const PING_TTL_MS = 10_000;

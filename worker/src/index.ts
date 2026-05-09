@@ -1,23 +1,23 @@
-import "./env";
+import "./env.js";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import tmi from "tmi.js";
 import type { ChannelRow } from "@parrot/db/schema";
-import { logger } from "./logger";
-import type { ChannelState } from "./types";
-import { createBatcher } from "./batcher";
-import { createCooldowns } from "./cooldowns";
-import { createStrikeTracker, loadBlocklist } from "./safety";
-import { hashKb, deriveIntents, extractKbUrls } from "./kb";
-import { createPipeline } from "./pipeline";
-import { startReconcileLoop } from "./reconcile";
-import { startHealthServer } from "./health";
+import { logger } from "./logger.js";
+import type { ChannelState } from "./types.js";
+import { createBatcher } from "./batcher.js";
+import { createCooldowns } from "./cooldowns.js";
+import { createStrikeTracker, loadBlocklist } from "./safety.js";
+import { hashKb, deriveIntents, extractKbUrls } from "./kb.js";
+import { createPipeline } from "./pipeline.js";
+import { startReconcileLoop } from "./reconcile.js";
+import { startHealthServer } from "./health.js";
 import {
   initR2,
   startR2FlushLoop,
   drainAllDbQueues,
-} from "./log";
-import { invalidateCache } from "./llm";
+} from "./log.js";
+import { invalidateCache } from "./llm.js";
 
 function fail(msg: string): never {
   logger.fatal(msg);

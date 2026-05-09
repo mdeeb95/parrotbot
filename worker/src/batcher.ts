@@ -1,4 +1,4 @@
-import type { Batcher, ChatMessage } from "./types";
+import type { Batcher, ChatMessage } from "./types.js";
 
 export function createBatcher(deps: {
   windowMs: number;

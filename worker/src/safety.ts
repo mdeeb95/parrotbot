@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import type { ChatMessage, BlockReason, Group, StrikeTracker } from "./types";
+import type { ChatMessage, BlockReason, Group, StrikeTracker } from "./types.js";
 
 const INJECTION_PATTERNS = [
   "ignore previous",

@@ -3,11 +3,11 @@ import { channels, type ChannelRow } from "@parrot/db/schema";
 import { channelSettingsSchema } from "@parrot/db/kb-schema";
 import { eq, and } from "drizzle-orm";
 import type { Client } from "tmi.js";
-import type { ChannelState } from "./types";
-import { hashKb, deriveIntents, extractKbUrls } from "./kb";
-import { invalidateCache } from "./llm";
-import { reloadCapForChannel, disposeCap } from "./cap";
-import { logger } from "./logger";
+import type { ChannelState } from "./types.js";
+import { hashKb, deriveIntents, extractKbUrls } from "./kb.js";
+import { invalidateCache } from "./llm.js";
+import { reloadCapForChannel, disposeCap } from "./cap.js";
+import { logger } from "./logger.js";
 
 const RECONCILE_INTERVAL_MS = 30_000;
 const JOIN_RATE = 18;

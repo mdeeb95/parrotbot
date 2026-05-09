@@ -6,19 +6,19 @@ import type {
   BlockReason,
   Group,
   LlmTokens,
-} from "./types";
-import { shouldKeep } from "./filter";
-import { looksLikeInjection, createOutputFilter } from "./safety";
-import { answerBatch } from "./llm";
-import { formatReply } from "./reply";
-import { isOverCap, addTokens } from "./cap";
+} from "./types.js";
+import { shouldKeep } from "./filter.js";
+import { looksLikeInjection, createOutputFilter } from "./safety.js";
+import { answerBatch } from "./llm.js";
+import { formatReply } from "./reply.js";
+import { isOverCap, addTokens } from "./cap.js";
 import {
   appendJsonl,
   recordPostedAnswer,
   recordTokenUsageOnly,
-} from "./log";
-import { parseCommand, handleCommand } from "./commands";
-import { logger } from "./logger";
+} from "./log.js";
+import { parseCommand, handleCommand } from "./commands.js";
+import { logger } from "./logger.js";
 
 export type PipelineDeps = {
   client: Client;

@@ -1,4 +1,4 @@
-import type { Cooldowns } from "./types";
+import type { Cooldowns } from "./types.js";
 
 export function createCooldowns(deps: {
   authorRateLimitSec: number;

@@ -1,6 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
-import type { ChatMessage, LlmResult, ChannelState } from "./types";
-import { renderKbForPrompt } from "./kb";
+import type { ChatMessage, LlmResult, ChannelState } from "./types.js";
+import { renderKbForPrompt } from "./kb.js";
 
 const client = new Anthropic();
 

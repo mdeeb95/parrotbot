@@ -2,10 +2,10 @@ import { db } from "@parrot/db";
 import { channels, usageDaily, type KnowledgeBase } from "@parrot/db/schema";
 import { kbSchema } from "@parrot/db/kb-schema";
 import { eq, and } from "drizzle-orm";
-import type { ChannelState } from "./types";
-import { deriveIntents, extractKbUrls, hashKb } from "./kb";
-import { invalidateCache } from "./llm";
-import { logger } from "./logger";
+import type { ChannelState } from "./types.js";
+import { deriveIntents, extractKbUrls, hashKb } from "./kb.js";
+import { invalidateCache } from "./llm.js";
+import { logger } from "./logger.js";
 
 const FIXED_PATHS = new Set([
   "identity.name",
