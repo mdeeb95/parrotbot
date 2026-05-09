@@ -1,0 +1,33 @@
+# One phrase per line. Case-insensitive substring match against the bot's drafted answer.
+# Lines starting with # are ignored. Edit freely — these are conservative starters.
+# If the bot's drafted answer contains any line, it gets blocked from posting and logged.
+
+n-word
+nigger
+nigga
+faggot
+fag
+tranny
+retard
+retarded
+kike
+chink
+spic
+gook
+wetback
+nazi
+hitler
+heil
+sieg heil
+kys
+kill yourself
+neck yourself
+groomer
+pedophile
+pedo
+rape
+rapist
+nonce
+slut
+whore
+cunt
