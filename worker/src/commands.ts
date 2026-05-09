@@ -54,14 +54,16 @@ export function isAuthorized(tags: TmiTags): boolean {
   return false;
 }
 
-// Strict parser: !bot <verb> <args>. Returns "ignored" for unauthorized
+const COMMAND_PREFIX = "!parrot";
+
+// Strict parser: !parrot <verb> <args>. Returns "ignored" for unauthorized
 // or unknown verbs (silent, no chat output) per the brief.
 export function parseCommand(text: string, tags: TmiTags): Command {
   const trimmed = text.trim();
-  if (!trimmed.toLowerCase().startsWith("!bot")) return { kind: "ignored" };
+  if (!trimmed.toLowerCase().startsWith(COMMAND_PREFIX)) return { kind: "ignored" };
   if (!isAuthorized(tags)) return { kind: "ignored" };
 
-  const after = trimmed.slice(4).trim();
+  const after = trimmed.slice(COMMAND_PREFIX.length).trim();
   if (!after) return { kind: "unknown" };
 
   // Tokenize but respect double-quoted strings.
@@ -110,7 +112,7 @@ export function parseCommand(text: string, tags: TmiTags): Command {
               : { kind: "link", label: target };
         return { kind: "set", target: setTarget, value };
       }
-      // Fixed-path form: !bot set <path> <value...>
+      // Fixed-path form: !parrot set <path> <value...>
       const path = rest[0];
       const value = rest.slice(1).join(" ");
       if (!FIXED_PATHS.has(path)) return { kind: "unknown" };
@@ -310,7 +312,7 @@ async function handleSet(
       .set({ kb: parsed.data as KnowledgeBase, updatedAt: new Date() })
       .where(eq(channels.id, state.channelId));
   } catch (err) {
-    logger.error({ err, channelId: state.channelId }, "!bot set db update failed");
+    logger.error({ err, channelId: state.channelId }, "!parrot set db update failed");
     return { result: "error", reply: "error: db update failed" };
   }
 

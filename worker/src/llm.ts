@@ -134,7 +134,7 @@ export async function answerBatch(
   return { groups, tokens, latency_ms, parse_error };
 }
 
-// Test seam — clear cached system blocks (e.g., after a !bot set updates KB).
+// Test seam — clear cached system blocks (e.g., after a !parrot set updates KB).
 export function invalidateCache(channelId: string) {
   cache.delete(channelId);
 }

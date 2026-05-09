@@ -214,7 +214,7 @@ export function KbForm({ initial }: { initial: KnowledgeBase }) {
             <FieldError msg={formState.errors.game?.message} />
             <p className="mt-2 text-[13px] text-text-muted">
               Update this whenever you switch games. You can also change it mid-stream by typing{" "}
-              <code className="rounded bg-bg px-1.5 py-px text-accent">!bot set game X</code>{" "}
+              <code className="rounded bg-bg px-1.5 py-px text-accent">!parrot set game X</code>{" "}
               in your own chat.
             </p>
           </AccordionContent>

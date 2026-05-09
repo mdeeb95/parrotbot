@@ -21,16 +21,16 @@ export default function HelpPage() {
       </p>
 
       <Section title="On / off / status">
-        <Row cmd="!bot on" desc="Resume posting." />
+        <Row cmd="!parrot on" desc="Resume posting." />
         <Row
-          cmd="!bot off"
+          cmd="!parrot off"
           desc="Pause posting. Resets to on whenever the bot restarts."
         />
         <Row
-          cmd="!bot stats"
+          cmd="!parrot stats"
           desc="Replies with today's seen / kept / posted / blocked / token counts."
         />
-        <Row cmd="!bot help" desc="Replies with a link to this page." />
+        <Row cmd="!parrot help" desc="Replies with a link to this page." />
       </Section>
 
       <Section title="Update the knowledge base from chat">
@@ -39,23 +39,23 @@ export default function HelpPage() {
           quotes:
         </p>
         <Row
-          cmd={`!bot set bio "I climb and play PoE2"`}
+          cmd={`!parrot set bio "I climb and play PoE2"`}
           desc="Update your bio."
         />
         <Row
-          cmd="!bot set game World of Warcraft Classic"
+          cmd="!parrot set game World of Warcraft Classic"
           desc="Update what you're playing."
         />
         <Row
-          cmd="!bot set schedule Mon-Fri 7pm PT"
+          cmd="!parrot set schedule Mon-Fri 7pm PT"
           desc="Update when you stream."
         />
         <Row
-          cmd="!bot set identity.name Mathew"
+          cmd="!parrot set identity.name Mathew"
           desc="Update your name."
         />
         <Row
-          cmd="!bot set identity.pronouns he/him"
+          cmd="!parrot set identity.pronouns he/him"
           desc="Update your pronouns."
         />
 
@@ -65,26 +65,26 @@ export default function HelpPage() {
           new entries via the dashboard:
         </p>
         <Row
-          cmd={`!bot set field "Build" https://wago.io/abc`}
+          cmd={`!parrot set field "Build" https://wago.io/abc`}
           desc="Update a custom field by label."
         />
         <Row
-          cmd={`!bot set qa "What's your setup?" 3090, 5800X`}
+          cmd={`!parrot set qa "What's your setup?" 3090, 5800X`}
           desc="Update a Q&A entry by question."
         />
         <Row
-          cmd={`!bot set link "LinkedIn" https://linkedin.com/in/...`}
+          cmd={`!parrot set link "LinkedIn" https://linkedin.com/in/...`}
           desc="Update a link entry by label."
         />
       </Section>
 
       <Section title="Quiet things down">
         <Row
-          cmd="!bot ignore <intent> [minutes]"
+          cmd="!parrot ignore <intent> [minutes]"
           desc='Stop answering this intent for N minutes (default 5). Intent IDs are visible in the activity log — they look like "current_game" or "custom_qa:qa_3".'
         />
         <Row
-          cmd="!bot ban <username>"
+          cmd="!parrot ban <username>"
           desc="Ignore everything from this user for the rest of the session. Resets on bot restart."
         />
       </Section>
@@ -101,7 +101,7 @@ export default function HelpPage() {
       <p className="mt-10 text-[13px] text-text-muted">
         Bot replies to commands obey the same on/off and shadow-mode flags as
         normal answers — if posting is paused, command confirmations are paused
-        too. Toggle with <code className="rounded bg-bg px-1.5 py-px text-accent">!bot on</code>.
+        too. Toggle with <code className="rounded bg-bg px-1.5 py-px text-accent">!parrot on</code>.
       </p>
     </div>
   );

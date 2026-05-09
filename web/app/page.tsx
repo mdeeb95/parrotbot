@@ -146,7 +146,7 @@ export default function LandingPage({
               <>
                 Switching games or characters mid-stream? Type{" "}
                 <code className="rounded bg-bg px-1.5 py-px text-[13px] text-accent">
-                  !bot set server X
+                  !parrot set server X
                 </code>{" "}
                 and you're done.
               </>

@@ -7,42 +7,42 @@ const viewerTags: TmiTags = { mod: false, badges: {} };
 
 describe("parseCommand — auth", () => {
   it("ignored when not authorized", () => {
-    expect(parseCommand("!bot on", viewerTags).kind).toBe("ignored");
+    expect(parseCommand("!parrot on", viewerTags).kind).toBe("ignored");
   });
 
   it("allows broadcaster badge", () => {
-    expect(parseCommand("!bot on", broadcasterTags).kind).toBe("on");
+    expect(parseCommand("!parrot on", broadcasterTags).kind).toBe("on");
   });
 
   it("allows moderator badge", () => {
-    expect(parseCommand("!bot on", { mod: false, badges: { moderator: "1" } }).kind).toBe("on");
+    expect(parseCommand("!parrot on", { mod: false, badges: { moderator: "1" } }).kind).toBe("on");
   });
 
-  it("ignored when not !bot", () => {
+  it("ignored when not !parrot", () => {
     expect(parseCommand("hello!", modTags).kind).toBe("ignored");
   });
 });
 
 describe("parseCommand — verbs", () => {
   it("on/off/stats/help", () => {
-    expect(parseCommand("!bot on", modTags).kind).toBe("on");
-    expect(parseCommand("!bot off", modTags).kind).toBe("off");
-    expect(parseCommand("!bot stats", modTags).kind).toBe("stats");
-    expect(parseCommand("!bot help", modTags).kind).toBe("help");
+    expect(parseCommand("!parrot on", modTags).kind).toBe("on");
+    expect(parseCommand("!parrot off", modTags).kind).toBe("off");
+    expect(parseCommand("!parrot stats", modTags).kind).toBe("stats");
+    expect(parseCommand("!parrot help", modTags).kind).toBe("help");
   });
 
   it("ban with @prefix and lowercased", () => {
-    const r = parseCommand("!bot ban @Alice", modTags);
+    const r = parseCommand("!parrot ban @Alice", modTags);
     expect(r.kind).toBe("ban");
     if (r.kind === "ban") expect(r.username).toBe("alice");
   });
 
   it("ban without args is unknown", () => {
-    expect(parseCommand("!bot ban", modTags).kind).toBe("unknown");
+    expect(parseCommand("!parrot ban", modTags).kind).toBe("unknown");
   });
 
   it("ignore with intent only", () => {
-    const r = parseCommand("!bot ignore bio", modTags);
+    const r = parseCommand("!parrot ignore bio", modTags);
     expect(r.kind).toBe("ignore");
     if (r.kind === "ignore") {
       expect(r.intent).toBe("bio");
@@ -51,7 +51,7 @@ describe("parseCommand — verbs", () => {
   });
 
   it("ignore with intent + minutes", () => {
-    const r = parseCommand("!bot ignore bio 30", modTags);
+    const r = parseCommand("!parrot ignore bio 30", modTags);
     expect(r.kind).toBe("ignore");
     if (r.kind === "ignore") {
       expect(r.intent).toBe("bio");
@@ -60,13 +60,13 @@ describe("parseCommand — verbs", () => {
   });
 
   it("unknown verb", () => {
-    expect(parseCommand("!bot frobnicate", modTags).kind).toBe("unknown");
+    expect(parseCommand("!parrot frobnicate", modTags).kind).toBe("unknown");
   });
 });
 
 describe("parseCommand — set", () => {
   it("fixed-path bio", () => {
-    const r = parseCommand('!bot set bio "I am xyz"', modTags);
+    const r = parseCommand('!parrot set bio "I am xyz"', modTags);
     expect(r.kind).toBe("set");
     if (r.kind === "set") {
       expect(r.target.kind).toBe("fixed");
@@ -76,7 +76,7 @@ describe("parseCommand — set", () => {
   });
 
   it("fixed-path identity.name", () => {
-    const r = parseCommand("!bot set identity.name Alice", modTags);
+    const r = parseCommand("!parrot set identity.name Alice", modTags);
     expect(r.kind).toBe("set");
     if (r.kind === "set" && r.target.kind === "fixed") {
       expect(r.target.path).toBe("identity.name");
@@ -84,7 +84,7 @@ describe("parseCommand — set", () => {
   });
 
   it("field subverb", () => {
-    const r = parseCommand('!bot set field "Build" https://wago.io/abc', modTags);
+    const r = parseCommand('!parrot set field "Build" https://wago.io/abc', modTags);
     expect(r.kind).toBe("set");
     if (r.kind === "set" && r.target.kind === "field") {
       expect(r.target.label).toBe("Build");
@@ -93,7 +93,7 @@ describe("parseCommand — set", () => {
   });
 
   it("qa subverb", () => {
-    const r = parseCommand('!bot set qa "Setup?" 3090, 5800X', modTags);
+    const r = parseCommand('!parrot set qa "Setup?" 3090, 5800X', modTags);
     expect(r.kind).toBe("set");
     if (r.kind === "set" && r.target.kind === "qa") {
       expect(r.target.question).toBe("Setup?");
@@ -102,7 +102,7 @@ describe("parseCommand — set", () => {
   });
 
   it("link subverb", () => {
-    const r = parseCommand('!bot set link "Twitter" https://x.com/me', modTags);
+    const r = parseCommand('!parrot set link "Twitter" https://x.com/me', modTags);
     expect(r.kind).toBe("set");
     if (r.kind === "set" && r.target.kind === "link") {
       expect(r.target.label).toBe("Twitter");
@@ -111,11 +111,11 @@ describe("parseCommand — set", () => {
   });
 
   it("unknown when set fixed-path is no longer supported (links.twitter)", () => {
-    const r = parseCommand("!bot set links.twitter https://x.com/me", modTags);
+    const r = parseCommand("!parrot set links.twitter https://x.com/me", modTags);
     expect(r.kind).toBe("unknown");
   });
 
   it("unknown when set has too few tokens", () => {
-    expect(parseCommand("!bot set bio", modTags).kind).toBe("unknown");
+    expect(parseCommand("!parrot set bio", modTags).kind).toBe("unknown");
   });
 });

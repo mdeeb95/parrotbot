@@ -66,7 +66,7 @@ export function createPipeline(deps: PipelineDeps) {
     });
 
     // Commands first (broadcaster/mod only).
-    if (text.trim().toLowerCase().startsWith("!bot")) {
+    if (text.trim().toLowerCase().startsWith("!parrot")) {
       const cmd = parseCommand(text, {
         badges: (tags.badges as Record<string, string> | undefined) ?? {},
         mod: tags.mod === true,

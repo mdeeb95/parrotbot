@@ -45,14 +45,14 @@ Until the bot is verified, it's globally rate-limited to 20 messages / 30s and ~
 
 Broadcaster or moderator only. Anything else is silently ignored.
 
-- `!bot on` / `!bot off` — pause/resume posting (in-memory; resets on restart)
-- `!bot stats` — replies with today's seen/kept/posted/blocked/tokens
-- `!bot ban <user>` — ignore a user (in-memory)
-- `!bot ignore <intent> [minutes]` — silence an intent for N min (default 5)
-- `!bot set <fixed-path> <value>` — e.g. `!bot set bio "..."`. Allowed paths: `identity.name`, `identity.pronouns`, `bio`, `game`, `schedule`
-- `!bot set field "<label>" <value>` — update a custom_fields entry by label
-- `!bot set qa "<question>" <value>` — update a custom_qa entry by question
-- `!bot set link "<label>" <url>` — update a links entry by label (add new links via the dashboard)
+- `!parrot on` / `!parrot off` — pause/resume posting (in-memory; resets on restart)
+- `!parrot stats` — replies with today's seen/kept/posted/blocked/tokens
+- `!parrot ban <user>` — ignore a user (in-memory)
+- `!parrot ignore <intent> [minutes]` — silence an intent for N min (default 5)
+- `!parrot set <fixed-path> <value>` — e.g. `!parrot set bio "..."`. Allowed paths: `identity.name`, `identity.pronouns`, `bio`, `game`, `schedule`
+- `!parrot set field "<label>" <value>` — update a custom_fields entry by label
+- `!parrot set qa "<question>" <value>` — update a custom_qa entry by question
+- `!parrot set link "<label>" <url>` — update a links entry by label (add new links via the dashboard)
 
 ## Railway notes
 
