@@ -17,10 +17,11 @@ const ACTIONABLE: readonly string[] = STREAMER_ACTIONABLE_REASONS;
 
 type Mode = "actionable" | "all";
 
-function pageHref(mode: Mode, page: number): string {
+function pageHref(mode: Mode, page: number, channelOverride?: string): string {
   const params = new URLSearchParams();
   if (mode === "all") params.set("show", "all");
   if (page > 1) params.set("page", String(page));
+  if (channelOverride) params.set("channel", channelOverride);
   const qs = params.toString();
   return qs ? `/dashboard/activity?${qs}` : "/dashboard/activity";
 }
@@ -32,9 +33,10 @@ function todayUtc(): string {
 export default async function ActivityPage({
   searchParams,
 }: {
-  searchParams: { page?: string; show?: string };
+  searchParams: { page?: string; show?: string; channel?: string };
 }) {
-  const ctx = (await getAuthContext())!;
+  const ctx = (await getAuthContext(searchParams.channel))!;
+  const channelOverride = ctx.isPrimary ? undefined : ctx.channel.twitchChannel;
   const mode: Mode = searchParams.show === "all" ? "all" : "actionable";
   const page = Math.max(1, parseInt(searchParams.page ?? "1", 10) || 1);
   const offset = (page - 1) * PAGE_SIZE;
@@ -115,7 +117,7 @@ export default async function ActivityPage({
       <div className="mb-4 flex items-center gap-2 text-[13px]">
         <span className="text-text-muted">Show:</span>
         <Link
-          href={pageHref("actionable", 1)}
+          href={pageHref("actionable", 1, channelOverride)}
           className={`rounded-lg border px-3 py-1.5 ${
             mode === "actionable"
               ? "border-accent bg-bg-elevated text-text"
@@ -125,7 +127,7 @@ export default async function ActivityPage({
           Actionable
         </Link>
         <Link
-          href={pageHref("all", 1)}
+          href={pageHref("all", 1, channelOverride)}
           className={`rounded-lg border px-3 py-1.5 ${
             mode === "all"
               ? "border-accent bg-bg-elevated text-text"
@@ -224,7 +226,7 @@ export default async function ActivityPage({
           <div className="flex gap-2">
             {page > 1 && (
               <Link
-                href={pageHref(mode, page - 1)}
+                href={pageHref(mode, page - 1, channelOverride)}
                 className="rounded-lg border border-border bg-bg-elevated px-3 py-1.5 hover:border-text-muted"
               >
                 Previous
@@ -232,7 +234,7 @@ export default async function ActivityPage({
             )}
             {page < totalPages && (
               <Link
-                href={pageHref(mode, page + 1)}
+                href={pageHref(mode, page + 1, channelOverride)}
                 className="rounded-lg border border-border bg-bg-elevated px-3 py-1.5 hover:border-text-muted"
               >
                 Next

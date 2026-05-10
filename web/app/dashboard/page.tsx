@@ -24,8 +24,12 @@ function monthStartString() {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-01`;
 }
 
-export default async function OverviewPage() {
-  const ctx = (await getAuthContext())!;
+export default async function OverviewPage({
+  searchParams,
+}: {
+  searchParams: { channel?: string };
+}) {
+  const ctx = (await getAuthContext(searchParams.channel))!;
   const { channel } = ctx;
 
   const [monthRow] = await db
@@ -86,7 +90,7 @@ export default async function OverviewPage() {
 
   const hasIdentity = !!channel.kb.identity?.name?.trim();
   const setupDone = channel.isModded && hasIdentity;
-  const canActivate = setupDone;
+  const canActivate = setupDone && ctx.isPrimary;
   const hasAnyUsage = monthlyAnswers > 0 || todayAnswers > 0;
 
   return (

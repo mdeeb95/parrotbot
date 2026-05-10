@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Toaster } from "sonner";
 import { getAuthContext } from "@/lib/auth";
 import { SidebarNav } from "./_components/sidebar-nav";
+import { ChannelSwitcher } from "./_components/channel-switcher";
 
 export const dynamic = "force-dynamic";
 
@@ -13,6 +14,7 @@ export default async function DashboardLayout({
 }) {
   const ctx = await getAuthContext();
   if (!ctx) redirect("/");
+  const primaryLogin = ctx.user.twitchLogin;
 
   return (
     <div className="min-h-screen bg-bg">
@@ -24,6 +26,14 @@ export default async function DashboardLayout({
               Parrot
             </Link>
             <SidebarNav />
+            {ctx.allChannels.length > 1 && (
+              <ChannelSwitcher
+                channels={ctx.allChannels.map((c) => ({
+                  twitchChannel: c.twitchChannel,
+                }))}
+                primaryLogin={primaryLogin}
+              />
+            )}
           </div>
           <div className="flex items-center gap-3 rounded-xl border border-border bg-bg-elevated p-3">
             {ctx.user.avatarUrl ? (
