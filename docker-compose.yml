@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16
+    image: postgres:18
     container_name: parrot-db
     environment:
       POSTGRES_USER: postgres
@@ -9,7 +9,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - parrot-db-data:/var/lib/postgresql/data
+      - parrot-db-data:/var/lib/postgresql
 
 volumes:
   parrot-db-data:
