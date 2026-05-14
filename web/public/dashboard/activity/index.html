@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" class="bg-cream text-espresso">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Activity — Parrot</title>
+    <link rel="stylesheet" href="/app.css" />
+    <script type="module" src="/js/activity.js"></script>
+  </head>
+  <body class="min-h-screen">
+    <div class="mx-auto flex max-w-6xl gap-8 px-6 py-8">
+      <aside id="sidebar" class="sticky top-8 hidden h-[calc(100vh-4rem)] w-[220px] shrink-0 flex-col justify-between md:flex"></aside>
+      <main class="min-w-0 flex-1">
+        <header class="mb-6">
+          <h1 class="text-3xl font-bold">Activity</h1>
+          <p class="mt-1 text-sm text-roast">What Parrot answered, and what it didn't.</p>
+        </header>
+
+        <section id="today" hidden class="mb-6 rounded-xl border border-mocha bg-foam p-5">
+          <h2 id="today-heading" class="mb-3 text-sm font-semibold text-roast"></h2>
+          <div id="today-pills" class="flex flex-wrap gap-2"></div>
+        </section>
+
+        <div class="mb-4 flex items-center gap-2 text-sm">
+          <span class="text-roast">Show:</span>
+          <a id="filter-actionable" class="rounded-lg border px-3 py-1.5">Actionable</a>
+          <a id="filter-all" class="rounded-lg border px-3 py-1.5">All</a>
+          <button
+            id="refresh"
+            type="button"
+            class="ml-auto rounded-lg border border-mocha bg-foam px-3 py-1.5 text-roast hover:border-mocha-strong"
+          >
+            Refresh
+          </button>
+        </div>
+
+        <section id="empty" hidden class="rounded-xl border border-mocha bg-foam p-5 text-sm text-roast">
+          Once your chat asks questions, they'll appear here. Use the activity log to
+          spot questions Parrot is missing — head to your
+          <a href="/dashboard/kb" class="text-accent hover:underline">Knowledge Base</a>
+          and add them.
+        </section>
+
+        <section id="rows" hidden class="overflow-hidden rounded-xl border border-mocha bg-foam">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-mocha text-left text-xs uppercase tracking-wider text-roast">
+                  <th class="px-4 py-3 font-medium">When</th>
+                  <th class="px-4 py-3 font-medium">Status</th>
+                  <th class="px-4 py-3 font-medium">Question</th>
+                  <th class="px-4 py-3 font-medium">Answer / Intent</th>
+                  <th class="px-4 py-3 text-right font-medium">Askers</th>
+                </tr>
+              </thead>
+              <tbody id="rows-body"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <div id="pagination" hidden class="mt-4 flex items-center justify-between text-sm text-roast">
+          <span id="page-info"></span>
+          <div class="flex gap-2">
+            <a id="prev-link" hidden class="rounded-lg border border-mocha bg-foam px-3 py-1.5 hover:border-mocha-strong">Previous</a>
+            <a id="next-link" hidden class="rounded-lg border border-mocha bg-foam px-3 py-1.5 hover:border-mocha-strong">Next</a>
+          </div>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>

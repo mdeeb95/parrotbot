@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@source "./public/**/*.{html,js}";
+
+@theme {
+  --color-cream: #f5ede0;
+  --color-foam: #fbf6ed;
+  --color-mocha: #d9c7b0;
+  --color-mocha-strong: #c4ab8c;
+  --color-espresso: #2b1810;
+  --color-roast: #7a5a47;
+  --color-accent: #a86b3d;
+  --color-accent-dark: #8a5530;
+  --color-twitch: #9146ff;
+}
+
+/* Slide the mobile drawer in from the left. The dialog's display toggle
+   normally skips transitions; @starting-style + allow-discrete bridges that. */
+#mobile-drawer {
+  transform: translateX(-100%);
+  transition:
+    transform 220ms ease-out,
+    overlay 220ms ease-out allow-discrete,
+    display 220ms ease-out allow-discrete;
+}
+#mobile-drawer[open] {
+  transform: translateX(0);
+}
+@starting-style {
+  #mobile-drawer[open] {
+    transform: translateX(-100%);
+  }
+}
+#mobile-drawer::backdrop {
+  background: rgb(0 0 0 / 0);
+  transition:
+    background-color 220ms ease-out,
+    overlay 220ms ease-out allow-discrete,
+    display 220ms ease-out allow-discrete;
+}
+#mobile-drawer[open]::backdrop {
+  background: rgb(0 0 0 / 0.4);
+}
+@starting-style {
+  #mobile-drawer[open]::backdrop {
+    background: rgb(0 0 0 / 0);
+  }
+}
+
+/* Hamburger rotates while drawer is open. JS toggles .is-open. */
+#mobile-trigger {
+  transition: transform 220ms ease-out;
+}
+#mobile-trigger.is-open {
+  transform: rotate(180deg);
+}

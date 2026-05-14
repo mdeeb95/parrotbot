@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" class="bg-cream text-espresso">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parrot — chat command reference</title>
+    <link rel="stylesheet" href="/app.css" />
+  </head>
+  <body class="min-h-screen">
+    <div class="mx-auto max-w-3xl px-6 py-10">
+      <a href="/" class="text-sm text-roast transition-colors hover:text-espresso">← Back</a>
+
+      <h1 class="mt-6 text-3xl font-bold">Chat commands</h1>
+      <p class="mt-2 text-base text-roast">
+        Run these in your Twitch chat. Only the broadcaster and moderators can run them —
+        everyone else is silently ignored.
+      </p>
+
+      <section class="mt-10">
+        <h2 class="mb-4 text-xl font-semibold">On / off / status</h2>
+        <div class="space-y-3 text-sm">
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot on</code>
+            <p class="self-center text-roast">Resume posting.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot off</code>
+            <p class="self-center text-roast">Pause posting. Resets to on whenever the bot restarts.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot stats</code>
+            <p class="self-center text-roast">Replies with today's seen / kept / posted / blocked / token counts.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot help</code>
+            <p class="self-center text-roast">Replies with a link to this page.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-10">
+        <h2 class="mb-4 text-xl font-semibold">Update the knowledge base from chat</h2>
+        <p class="mb-4 text-sm text-roast">
+          Quick edits without leaving stream. Five fixed paths can be set without quotes:
+        </p>
+        <div class="space-y-3 text-sm">
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set bio "I climb and play PoE2"</code>
+            <p class="self-center text-roast">Update your bio.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set game World of Warcraft Classic</code>
+            <p class="self-center text-roast">Update what you're playing.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set schedule Mon-Fri 7pm PT</code>
+            <p class="self-center text-roast">Update when you stream.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set identity.name Mathew</code>
+            <p class="self-center text-roast">Update your name.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set identity.pronouns he/him</code>
+            <p class="self-center text-roast">Update your pronouns.</p>
+          </div>
+        </div>
+
+        <p class="mb-4 mt-6 text-sm text-roast">
+          For custom fields, Q&amp;A, and links — these update an
+          <strong class="text-espresso">existing</strong> entry by label. Add new entries via the dashboard:
+        </p>
+        <div class="space-y-3 text-sm">
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set field "Build" https://wago.io/abc</code>
+            <p class="self-center text-roast">Update a custom field by label.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set qa "What's your setup?" 3090, 5800X</code>
+            <p class="self-center text-roast">Update a Q&amp;A entry by question.</p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot set link "LinkedIn" https://linkedin.com/in/...</code>
+            <p class="self-center text-roast">Update a link entry by label.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-10">
+        <h2 class="mb-4 text-xl font-semibold">Quiet things down</h2>
+        <div class="space-y-3 text-sm">
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot ignore &lt;intent&gt; [minutes]</code>
+            <p class="self-center text-roast">
+              Stop answering this intent for N minutes (default 5). Intent IDs are visible in the activity log
+              — they look like "current_game" or "custom_qa:qa_3".
+            </p>
+          </div>
+          <div class="grid grid-cols-1 gap-2 sm:grid-cols-[minmax(0,_2fr)_3fr] sm:gap-4">
+            <code class="rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-accent">!parrot ban &lt;username&gt;</code>
+            <p class="self-center text-roast">
+              Ignore everything from this user for the rest of the session. Resets on bot restart.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mt-10">
+        <h2 class="mb-4 text-xl font-semibold">What the bot can't do</h2>
+        <ul class="list-disc space-y-1.5 pl-5 text-sm text-roast">
+          <li>Ban, time out, or delete chat messages</li>
+          <li>Read whispers</li>
+          <li>Read other channels</li>
+          <li>Add new custom fields, Q&amp;A, or links from chat (use the dashboard)</li>
+        </ul>
+      </section>
+
+      <p class="mt-10 text-xs text-roast">
+        Bot replies to commands obey the same on/off and shadow-mode flags as normal answers —
+        if posting is paused, command confirmations are paused too. Toggle with
+        <code class="rounded bg-cream px-1.5 py-px text-accent">!parrot on</code>.
+      </p>
+    </div>
+  </body>
+</html>
