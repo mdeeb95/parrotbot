@@ -11,11 +11,11 @@
     "node": ">=20"
   },
   "scripts": {
-    "dev:web": "npm --workspace web run dev",
+    "dev:web:server": "npm --workspace web run dev:server",
+    "dev:web:css": "npm --workspace web run dev:css",
     "dev:worker": "npm --workspace worker run dev",
     "build": "npm --workspace web run build && npm --workspace worker run build",
     "test": "npm --workspace web run test && npm --workspace worker run test",
-    "test:e2e": "npm --workspace web run test:e2e",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v && docker compose up -d",

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en" class="bg-cream text-espresso">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Parrot — Chat that answers itself</title>
+    <meta
+      name="description"
+      content="Parrot is a Twitch chat bot that answers viewer questions about your stream — server, build, addons, schedule, links — so you don't have to."
+    />
+    <link rel="stylesheet" href="/app.css" />
+    <script type="module" src="/js/landing.js"></script>
+  </head>
+  <body class="min-h-screen">
+    <div class="mx-auto max-w-5xl px-6">
+      <nav class="flex items-center justify-between py-6">
+        <div class="flex items-center gap-2.5 text-2xl font-bold">
+          <span class="text-3xl">🦜</span>
+          Parrot
+        </div>
+        <ul class="flex list-none items-center gap-8">
+          <li class="hidden sm:block">
+            <a href="#features" class="text-sm text-roast transition-colors hover:text-espresso">Features</a>
+          </li>
+          <li class="hidden sm:block">
+            <a href="#how" class="text-sm text-roast transition-colors hover:text-espresso">How it works</a>
+          </li>
+          <li class="hidden sm:block">
+            <a href="#pricing" class="text-sm text-roast transition-colors hover:text-espresso">Pricing</a>
+          </li>
+          <li>
+            <a href="/api/auth/twitch"
+              class="inline-flex items-center gap-2.5 rounded-lg bg-twitch px-5 py-3 text-sm font-semibold hover:opacity-90">
+              Sign in with Twitch
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <div id="auth-error" hidden class="mb-4 rounded-lg border border-accent bg-foam px-5 py-3 text-center text-sm">
+        Sign-in didn't complete. Please try again.
+      </div>
+
+      <section class="px-0 pb-24 pt-8 text-center">
+        <div class="mb-4 text-xs font-semibold uppercase tracking-[0.12em] text-accent">For Twitch Streamers</div>
+        <h1 class="mb-6 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-6xl">
+          Stop answering the same question
+          <span class="text-accent">fifty times.</span>
+        </h1>
+        <p class="mx-auto mb-9 max-w-xl text-lg text-roast">
+          Parrot is a chat bot that already knows your server, your addons, your schedule, and your build link.
+          Your viewers ask, Parrot answers. You focus on streaming.
+        </p>
+        <div class="mb-4 flex flex-wrap justify-center gap-3.5">
+          <a href="/api/auth/twitch"
+            class="inline-flex items-center gap-2.5 rounded-lg bg-twitch px-5 py-3 text-sm font-semibold hover:opacity-90">
+            Sign in with Twitch
+          </a>
+          <a href="#how"
+            class="inline-flex items-center gap-2.5 rounded-lg border border-mocha bg-foam px-5 py-3 text-sm font-semibold hover:border-mocha-strong">
+            See how it works
+          </a>
+          <button id="dev-login" type="button" hidden
+            class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-cream">
+            Dev login
+          </button>
+        </div>
+        <div class="text-sm text-roast">Free for the first 500 answers each month — no credit card required.</div>
+
+        <div class="mx-auto mt-14 max-w-xl rounded-xl border border-mocha bg-foam px-5 py-4 text-left font-mono text-sm">
+          <div class="py-1 text-roast">
+            <b class="font-semibold text-espresso">jakethewolf:</b> what server u on
+          </div>
+          <div class="py-1 text-roast">
+            <b class="font-semibold text-espresso">mageboi42:</b> realm?
+          </div>
+          <div class="py-1 text-roast">
+            <b class="font-semibold text-espresso">cattolicker:</b> server name??
+          </div>
+          <div class="py-1 text-roast">
+            <b class="font-semibold text-espresso">mistress_oof:</b> what's the realm
+          </div>
+          <div class="py-1 pt-2.5">
+            <b class="font-semibold text-accent">🦜 Parrot:</b>
+            @jakethewolf @mageboi42 @cattolicker @mistress_oof — Skull Rock, Wrath Classic
+          </div>
+        </div>
+      </section>
+
+      <section id="features" class="border-t border-mocha py-20">
+        <h2 class="mb-3.5 text-center text-3xl font-bold tracking-tight sm:text-4xl">Built for streamers, not for chaos.</h2>
+        <p class="mx-auto mb-14 max-w-xl text-center text-base text-roast">
+          Parrot answers what your chat actually asks all day. Nothing else.
+        </p>
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+          <div class="rounded-xl border border-mocha bg-foam p-7 hover:border-accent">
+            <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-xl">🪺</div>
+            <h3 class="mb-2 text-lg font-semibold">Knows your stream</h3>
+            <p class="text-sm text-roast">Server, character, build, addons, schedule, links. Preload everything once, update as you stream.</p>
+          </div>
+          <div class="rounded-xl border border-mocha bg-foam p-7 hover:border-accent">
+            <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-xl">⚡</div>
+            <h3 class="mb-2 text-lg font-semibold">Smart batched replies</h3>
+            <p class="text-sm text-roast">When 30 viewers ask the same thing at once, Parrot answers them in one message. No spam, no flood.</p>
+          </div>
+          <div class="rounded-xl border border-mocha bg-foam p-7 hover:border-accent">
+            <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-xl">🎤</div>
+            <h3 class="mb-2 text-lg font-semibold">Update from chat</h3>
+            <p class="text-sm text-roast">
+              Switching games mid-stream? Type
+              <code class="rounded bg-cream px-1.5 py-px text-xs text-accent">!parrot set server X</code>
+              and you're done.
+            </p>
+          </div>
+          <div class="rounded-xl border border-mocha bg-foam p-7 hover:border-accent">
+            <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-xl">🛡️</div>
+            <h3 class="mb-2 text-lg font-semibold">Trolls can't break it</h3>
+            <p class="text-sm text-roast">Multi-layer prompt-injection defense. Parrot never repeats chat content or invents answers.</p>
+          </div>
+          <div class="rounded-xl border border-mocha bg-foam p-7 hover:border-accent">
+            <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-xl">🔇</div>
+            <h3 class="mb-2 text-lg font-semibold">Quiet by design</h3>
+            <p class="text-sm text-roast">If Parrot doesn't know, it says nothing. Same intent gets one reply, then a cooldown — never spammy.</p>
+          </div>
+          <div class="rounded-xl border border-mocha bg-foam p-7 hover:border-accent">
+            <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-accent/10 text-xl">📊</div>
+            <h3 class="mb-2 text-lg font-semibold">End-of-stream report</h3>
+            <p class="text-sm text-roast">See what your chat was actually asking. Add the gaps to your knowledge base in one click.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="how" class="border-t border-mocha py-20">
+        <h2 class="mb-3.5 text-center text-3xl font-bold tracking-tight sm:text-4xl">Four steps, then go live.</h2>
+        <p class="mx-auto mb-14 max-w-xl text-center text-base text-roast">
+          If you can mod a bot in your chat, you can set up Parrot.
+        </p>
+        <div class="mx-auto max-w-2xl divide-y divide-mocha">
+          <div class="flex gap-5 py-5">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent font-bold text-cream">1</div>
+            <div>
+              <h4 class="mb-1 text-base font-semibold">Sign in with Twitch</h4>
+              <p class="text-sm text-roast">One click. Twitch handles the login — we never see your password.</p>
+            </div>
+          </div>
+          <div class="flex gap-5 py-5">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent font-bold text-cream">2</div>
+            <div>
+              <h4 class="mb-1 text-base font-semibold">Mod the bot so it can post in any chat mode</h4>
+              <p class="text-sm text-roast">
+                Type <code class="rounded bg-cream px-1.5 py-px text-xs text-accent">/mod parrotparrotbot</code> so
+                Twitch doesn't drop its posts during Slow / Sub / Follower mode. Parrot only posts — no banning or deleting.
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-5 py-5">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent font-bold text-cream">3</div>
+            <div>
+              <h4 class="mb-1 text-base font-semibold">Tell Parrot about your stream</h4>
+              <p class="text-sm text-roast">Server, build, addons, schedule, links. About five minutes.</p>
+            </div>
+          </div>
+          <div class="flex gap-5 py-5">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-accent font-bold text-cream">4</div>
+            <div>
+              <h4 class="mb-1 text-base font-semibold">Go live</h4>
+              <p class="text-sm text-roast">Parrot starts answering questions the moment your stream goes live. That's it.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" class="border-t border-mocha py-20">
+        <h2 class="mb-3.5 text-center text-3xl font-bold tracking-tight sm:text-4xl">Free until it isn't.</h2>
+        <p class="mx-auto mb-14 max-w-xl text-center text-base text-roast">Most streams fit comfortably in the free tier.</p>
+        <div class="mx-auto grid max-w-3xl grid-cols-1 gap-5 md:grid-cols-2">
+          <div class="rounded-xl border border-mocha bg-foam p-8">
+            <h3 class="mb-1 text-lg font-semibold">Hobby</h3>
+            <div class="mb-4 text-sm text-roast">For most streamers, this is plenty.</div>
+            <div class="mb-1 text-4xl font-extrabold tracking-tight">
+              $0<span class="text-base font-medium text-roast">/mo</span>
+            </div>
+            <ul class="mb-6 mt-5 space-y-1 text-sm text-roast">
+              <li><span class="mr-2 font-bold text-accent">✓</span>500 answers per month</li>
+              <li><span class="mr-2 font-bold text-accent">✓</span>One channel</li>
+              <li><span class="mr-2 font-bold text-accent">✓</span>End-of-stream reports</li>
+              <li><span class="mr-2 font-bold text-accent">✓</span>All safety features</li>
+            </ul>
+            <a href="/api/auth/twitch"
+              class="flex w-full items-center justify-center gap-2.5 rounded-lg bg-twitch px-5 py-3 text-sm font-semibold hover:opacity-90">
+              Sign in with Twitch
+            </a>
+          </div>
+          <div class="relative rounded-xl border border-accent bg-foam p-8">
+            <div class="absolute -top-2.5 right-6 rounded-xl bg-accent px-2.5 py-px text-xs font-bold text-cream">POPULAR</div>
+            <h3 class="mb-1 text-lg font-semibold">Pro</h3>
+            <div class="mb-4 text-sm text-roast">For full-time streamers and big chats.</div>
+            <div class="mb-1 text-4xl font-extrabold tracking-tight">
+              $15<span class="text-base font-medium text-roast">/mo</span>
+            </div>
+            <ul class="mb-6 mt-5 space-y-1 text-sm text-roast">
+              <li><span class="mr-2 font-bold text-accent">✓</span>5,000 answers per month</li>
+              <li><span class="mr-2 font-bold text-accent">✓</span>Bring-your-own API key option</li>
+              <li><span class="mr-2 font-bold text-accent">✓</span>Priority support</li>
+              <li><span class="mr-2 font-bold text-accent">✓</span>Early access to new features</li>
+            </ul>
+            <a href="/api/auth/twitch"
+              class="flex w-full items-center justify-center gap-2.5 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-cream hover:opacity-90">
+              Start Pro
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section class="border-t border-mocha py-20">
+        <h2 class="mb-14 text-center text-3xl font-bold tracking-tight sm:text-4xl">Common questions.</h2>
+        <div class="mx-auto max-w-3xl divide-y divide-mocha">
+          <div class="py-5">
+            <div class="mb-2 text-base font-semibold">Will Parrot spam my chat?</div>
+            <div class="text-sm text-roast">
+              No. Parrot batches messages over a 30-second window and answers everyone with the same question in one reply.
+              After answering, it cools down for several minutes before repeating itself.
+            </div>
+          </div>
+          <div class="py-5">
+            <div class="mb-2 text-base font-semibold">Can someone trick Parrot into saying something offensive?</div>
+            <div class="text-sm text-roast">
+              Multi-layer defense. The model treats chat as data, not instructions. Responses go through a content filter.
+              Nothing from chat is posted verbatim. Repeated injection attempts auto-block the user.
+            </div>
+          </div>
+          <div class="py-5">
+            <div class="mb-2 text-base font-semibold">What if Parrot doesn't know the answer?</div>
+            <div class="text-sm text-roast">
+              It stays silent. Parrot only answers from your knowledge base — it never guesses.
+              Unanswered questions show up on your end-of-stream report so you can add the gaps.
+            </div>
+          </div>
+          <div class="py-5">
+            <div class="mb-2 text-base font-semibold">Does this work on YouTube?</div>
+            <div class="text-sm text-roast">Twitch only for now. YouTube support is coming.</div>
+          </div>
+          <div class="py-5">
+            <div class="mb-2 text-base font-semibold">Can I cancel anytime?</div>
+            <div class="text-sm text-roast">Yes. Cancel from your dashboard. No emails, no calls, no friction.</div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="border-t border-mocha py-14 text-center text-sm text-roast">
+        <ul class="mb-5 flex flex-wrap justify-center gap-7">
+          <li><a href="#" class="hover:text-espresso">About</a></li>
+          <li><a href="#" class="hover:text-espresso">Terms</a></li>
+          <li><a href="#" class="hover:text-espresso">Privacy</a></li>
+          <li><a href="#" class="hover:text-espresso">Contact</a></li>
+          <li><a href="#" class="hover:text-espresso">Twitter</a></li>
+          <li><a href="#" class="hover:text-espresso">Discord</a></li>
+        </ul>
+        <div>© 2026 Parrot. Built for streamers.</div>
+      </footer>
+    </div>
+  </body>
+</html>

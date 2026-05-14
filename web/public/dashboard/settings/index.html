@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" class="bg-cream text-espresso">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Settings — Parrot</title>
+    <link rel="stylesheet" href="/app.css" />
+    <script type="module" src="/js/settings.js"></script>
+  </head>
+  <body class="min-h-screen">
+    <div class="mx-auto flex max-w-6xl gap-8 px-6 py-8">
+      <aside id="sidebar" class="sticky top-8 hidden h-[calc(100vh-4rem)] w-[220px] shrink-0 flex-col justify-between md:flex"></aside>
+      <main class="min-w-0 flex-1">
+        <header class="mb-6">
+          <h1 class="text-3xl font-bold">Settings</h1>
+        </header>
+
+      <section class="mb-6 rounded-xl border border-mocha bg-foam p-5">
+        <h2 class="mb-3 text-base font-semibold">Account</h2>
+        <dl class="divide-y divide-mocha">
+          <div class="flex items-center justify-between py-2">
+            <dt class="text-sm text-roast">Twitch username</dt>
+            <dd id="twitch-login" class="text-sm">—</dd>
+          </div>
+          <div class="flex items-center justify-between py-2">
+            <dt class="text-sm text-roast">Email</dt>
+            <dd id="email" class="text-sm">—</dd>
+          </div>
+          <div class="flex items-center justify-between py-2">
+            <dt class="text-sm text-roast">Plan</dt>
+            <dd id="plan" class="text-sm">—</dd>
+          </div>
+        </dl>
+        <p class="mt-3 text-xs text-roast">Pro plan coming soon.</p>
+      </section>
+
+      <section class="mb-6 rounded-xl border border-mocha bg-foam p-5">
+        <h2 class="mb-2 text-base font-semibold">Bot account</h2>
+        <p class="text-sm text-roast">
+          Parrot posts as <strong>@parrotparrotbot</strong>. It needs mod status so
+          Twitch doesn't drop its messages during Slow / Sub-only / Follower-only mode.
+          It can only post — no banning, deleting, or whispers.
+        </p>
+        <p class="mt-3 text-sm text-roast">If it's been un-modded, re-add with:</p>
+        <code class="mt-2 inline-block rounded-lg border border-mocha bg-cream px-3 py-2 font-mono text-sm text-accent">
+          /mod parrotparrotbot
+        </code>
+      </section>
+
+      <section class="rounded-xl border border-red-900/50 bg-foam p-5">
+        <h2 class="mb-2 text-base font-semibold text-red-700">Danger zone</h2>
+        <p class="mb-4 text-sm text-roast">
+          Delete your account and all associated data. This can't be undone.
+        </p>
+        <button
+          id="open-delete"
+          type="button"
+          class="rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold hover:bg-red-600"
+        >
+          Delete my Parrot account
+        </button>
+      </section>
+      </main>
+    </div>
+
+    <dialog id="delete-dialog" class="rounded-xl border border-mocha bg-cream text-espresso backdrop:bg-black/60">
+      <form method="dialog" class="w-[28rem] max-w-full p-6">
+        <h3 class="text-lg font-semibold">Delete your account?</h3>
+        <p class="mt-2 text-sm text-roast">
+          This permanently removes your Parrot data — channel settings, knowledge base, and activity log.
+          You'll need to sign up again to use Parrot.
+        </p>
+        <label class="mt-4 block text-sm">
+          Type <span id="confirm-target" class="font-semibold">—</span> to confirm
+        </label>
+        <input
+          id="confirm-input"
+          type="text"
+          class="mt-1 w-full rounded border border-mocha bg-cream px-3 py-2 text-sm focus:border-accent focus:outline-none"
+          autocomplete="off"
+        />
+        <div class="mt-5 flex justify-end gap-2">
+          <button
+            type="submit"
+            class="rounded-lg px-3 py-1.5 text-sm text-roast hover:text-espresso"
+          >
+            Cancel
+          </button>
+          <button
+            id="confirm-delete"
+            type="button"
+            disabled
+            class="rounded-lg bg-red-700 px-3 py-1.5 text-sm font-semibold disabled:cursor-not-allowed disabled:opacity-50 hover:bg-red-600"
+          >
+            Delete account
+          </button>
+        </div>
+      </form>
+    </dialog>
+  </body>
+</html>
