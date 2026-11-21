@@ -1,10 +1,16 @@
-// Inspect Xaryu shadow-channel activity. Pure ESM, no tsx required.
-//   DATABASE_URL=<prod public URL> node packages/db/scripts/view-xaryu.mjs
+// Inspect a shadow-mode channel's activity. Pure ESM, no tsx required.
+//   DATABASE_URL=<prod public URL> node packages/db/scripts/view-shadow-channel.mjs <twitch_login>
 import postgres from "postgres";
 
 const url = process.env.DATABASE_URL;
 if (!url) {
   console.error("DATABASE_URL is not set");
+  process.exit(1);
+}
+
+const login = process.argv[2]?.toLowerCase();
+if (!login) {
+  console.error("usage: view-shadow-channel.mjs <twitch_login>");
   process.exit(1);
 }
 
@@ -14,11 +20,11 @@ try {
   const [channel] = await sql`
     SELECT id, twitch_channel, is_active, is_modded, settings
     FROM channels
-    WHERE twitch_channel = 'xaryu'
+    WHERE twitch_channel = ${login}
     LIMIT 1
   `;
   if (!channel) {
-    console.error("xaryu channel not found — run seed-xaryu.ts first");
+    console.error(`${login} channel not found — run seed-shadow-channel.ts first`);
     process.exit(1);
   }
   console.log("channel:", channel);

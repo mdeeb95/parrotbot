@@ -9,45 +9,40 @@ if (!url) {
   process.exit(1);
 }
 
-const XARYU_TWITCH_LOGIN = "xaryu";
-const XARYU_TWITCH_ID = "32085830";
-const SHADOW_USER_LOGIN = "_shadow_xaryu_owner";
+// Seeds a channel in shadow mode: the worker reads its chat and logs what it
+// would have answered, but never posts. Useful for evaluating answer quality
+// against real chat volume before a streamer opts in.
+//   DATABASE_URL=... tsx packages/db/scripts/seed-shadow-channel.ts <twitch_login>
+const CHANNEL_LOGIN = process.argv[2]?.toLowerCase();
+if (!CHANNEL_LOGIN) {
+  console.error("usage: seed-shadow-channel.ts <twitch_login>");
+  process.exit(1);
+}
+const SHADOW_USER_LOGIN = `_shadow_${CHANNEL_LOGIN}_owner`;
 
+// Example knowledge base. Replace with facts about the channel being shadowed.
 const KB: KnowledgeBase = {
-  identity: { name: "Xaryu", pronouns: "he/him" },
-  bio: "Real name Josh Lujan. Multi-Rank-1 Mage and longtime WoW streamer (since 2012). Known for fitness/health content alongside gaming.",
-  game: "WoW Classic Hardcore — currently doing a Gnome-only, no-healers challenge run on Skull Rock.",
+  identity: { name: "ExampleStreamer", pronouns: "they/them" },
+  bio: "Variety streamer focused on WoW Classic Hardcore challenge runs.",
+  game: "WoW Classic Hardcore — self-found challenge run.",
   schedule:
-    "Streams almost daily, around 8 hours per session. Typically goes live around 9am Pacific (12pm Eastern / 5pm UK). No fixed off-days.",
+    "Streams weekdays, around 6 hours per session. Typically goes live around 9am Pacific.",
   links: [
-    { label: "Twitter / X", url: "https://twitter.com/xaryu" },
-    { label: "YouTube", url: "https://youtube.com/user/xaryutv" },
-    { label: "TikTok", url: "https://tiktok.com/@xaryu" },
-    { label: "Instagram", url: "https://instagram.com/joshlujan" },
-    { label: "Discord", url: "https://discord.gg/xaryu" },
-    { label: "Store", url: "https://xaryu.tv" },
+    { label: "YouTube", url: "https://youtube.com/@examplestreamer" },
+    { label: "Discord", url: "https://discord.gg/examplestreamer" },
   ],
   custom_fields: [
-    { label: "Server", value: "Skull Rock" },
-    { label: "Character", value: "Xaryulocked (Gnome)" },
-    { label: "Run rules", value: "Gnome-only, no healers" },
+    { label: "Server", value: "Example Realm" },
+    { label: "Run rules", value: "Self-found, no dungeons before 20" },
   ],
   custom_qa: [
     {
       question: "What server are you on?",
-      answer: "Skull Rock — WoW Classic Hardcore.",
-    },
-    {
-      question: "What's your character name?",
-      answer: "Xaryulocked, a gnome on Skull Rock.",
+      answer: "Example Realm — WoW Classic Hardcore.",
     },
     {
       question: "What are the rules of this run?",
-      answer: "Gnome-only, no healers, Hardcore (one life). Skull Rock server.",
-    },
-    {
-      question: "How long have you been streaming?",
-      answer: "Since 2012 — over a decade on Twitch.",
+      answer: "Self-found, Hardcore (one life), no dungeons before 20.",
     },
   ],
 };
@@ -72,9 +67,9 @@ async function main() {
       const [created] = await db
         .insert(users)
         .values({
-          twitchId: `shadow-${XARYU_TWITCH_ID}`,
+          twitchId: `shadow-${CHANNEL_LOGIN}`,
           twitchLogin: SHADOW_USER_LOGIN,
-          displayName: "Shadow Owner (Xaryu)",
+          displayName: `Shadow Owner (${CHANNEL_LOGIN})`,
           email: null,
           avatarUrl: null,
           plan: "free",
@@ -84,11 +79,11 @@ async function main() {
       console.log(`created shadow user: ${userId}`);
     }
 
-    // 2. Find-or-update the xaryu channel row.
+    // 2. Find-or-update the channel row.
     const [existingChannel] = await db
       .select()
       .from(channels)
-      .where(eq(channels.twitchChannel, XARYU_TWITCH_LOGIN))
+      .where(eq(channels.twitchChannel, CHANNEL_LOGIN))
       .limit(1);
 
     if (existingChannel) {
@@ -102,21 +97,21 @@ async function main() {
         })
         .where(eq(channels.id, existingChannel.id));
       console.log(
-        `updated existing xaryu channel: ${existingChannel.id} (shadow_mode=true)`,
+        `updated existing ${CHANNEL_LOGIN} channel: ${existingChannel.id} (shadow_mode=true)`,
       );
     } else {
       const [created] = await db
         .insert(channels)
         .values({
           userId,
-          twitchChannel: XARYU_TWITCH_LOGIN,
+          twitchChannel: CHANNEL_LOGIN,
           isActive: true,
           isModded: true,
           kb: KB,
           settings: { shadow_mode: true },
         })
         .returning();
-      console.log(`created xaryu channel: ${created.id} (shadow_mode=true)`);
+      console.log(`created ${CHANNEL_LOGIN} channel: ${created.id} (shadow_mode=true)`);
     }
 
     console.log("done.");

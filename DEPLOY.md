@@ -114,6 +114,6 @@ Railway keeps the last few deploys. If the latest is broken: service → **Deplo
 
 - Postgres: free tier (covered by Railway's monthly $5 credit)
 - Web + worker: ~$5-10/month combined for low traffic
-- Anthropic: pay-as-you-go. Haiku is cheap. With one Xaryu-volume channel: <$2/day.
+- Anthropic: pay-as-you-go. Haiku is cheap. With one large (10k+ viewer) channel: <$2/day.
 
 Total: ~$15-25/month for the soft launch.

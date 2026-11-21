@@ -38,7 +38,7 @@ These follow from the Laws. They are concrete enough to cite in a code review.
 
 The app is deployed on Railway. Three services:
 
-- **web** — https://railway.com/project/e365ff6a-7674-4984-ba5b-ffd2abd5b7f0/service/ad32b467-7520-404e-8bd7-ca2ac3d96de9
+- **web** — Hono server + static dashboard
 - **worker** — same project, separate service
 - **db** — Railway Postgres
 

@@ -8,7 +8,7 @@ and posts grounded answers back to chat.
 
 This repo is an npm workspace with three packages:
 
-- `web/` — Next.js dashboard. Streamers sign in via Twitch, edit their KB,
+- `web/` — Hono server + static HTML dashboard. Streamers sign in via Twitch, edit their KB,
   toggle the bot on/off, and view activity.
 - `worker/` — Long-running Node service. Connects to Twitch as a pooled bot
   account (`@parrotbot`), joins every active channel, runs the pipeline, and
@@ -23,7 +23,8 @@ npm install                    # workspace install
 cp .env.example .env           # fill in secrets
 npm run db:up                  # local Postgres via docker
 npm run db:migrate
-npm run dev:web                # dashboard at http://localhost:3000
+npm run dev:web:server         # dashboard at http://localhost:3000
+npm run dev:web:css            # Tailwind watcher (separate terminal)
 npm run dev:worker             # worker (requires BOT_OAUTH + ANTHROPIC_API_KEY)
 ```
 
@@ -34,7 +35,8 @@ deploy notes.
 
 | Script | Effect |
 | --- | --- |
-| `npm run dev:web` | Run the dashboard in dev mode |
+| `npm run dev:web:server` | Run the dashboard server in dev mode (tsx watch) |
+| `npm run dev:web:css` | Rebuild dashboard CSS on change (Tailwind watch) |
 | `npm run dev:worker` | Run the worker in dev mode (tsx watch) |
 | `npm run build` | Build both web and worker |
 | `npm run db:up` / `db:down` / `db:reset` | Local Postgres via Docker |
